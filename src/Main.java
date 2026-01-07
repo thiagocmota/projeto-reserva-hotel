@@ -1,3 +1,4 @@
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Main {
@@ -25,8 +26,9 @@ public class Main {
 
     }
 
+
     public static void chamaMenu() {
-        System.out.println("----------BEM VINDO----------");
+        System.out.println("\n----------BEM VINDO----------");
         System.out.println("1 - Cadastrar nova reserva \n2 - Listar reservas cadastradas " +
                 "\n3 - Buscar reserva por nome do hóspede \n4 - Listar reservas por números de dias \n0 - Sair");
     }
@@ -41,7 +43,8 @@ public class Main {
                 listaReservas(reservasConfirmadas, contadorReserva);
                 break;
             case 3:
-                // buscar reserva por nome
+                buscaReservaPorNome(reservasConfirmadas, contadorReserva, scanner);
+
                 break;
             case 4:
                 //listar reserva por número de dias
@@ -55,8 +58,27 @@ public class Main {
         return contadorReserva;
     }
 
+    private static void buscaReservaPorNome(Reserva[] reservasConfirmadas, int contadorReserva, Scanner scanner) {
+        System.out.println("Digite o nome do hóspede que deseja buscar a reserva: ");
+        String nomeDesejado = scanner.nextLine();
+
+        int reservasEncontradas = 0;
+
+        for (int i = 0; i < contadorReserva; i++) {
+            if (reservasConfirmadas[i].getNomeHospede().toLowerCase().contains(nomeDesejado.toLowerCase()) && reservasConfirmadas[i] != null) {
+                System.out.println(reservasConfirmadas[i]);
+                reservasEncontradas++;
+            }
+        }
+        if (reservasEncontradas == 0) {
+            System.out.println("\nNenhuma reserva com o nome " + nomeDesejado + " encontrada");
+        } else {
+            System.out.println("\nForam encontradas " + reservasEncontradas + " para o hóspede " + nomeDesejado);
+        }
+    }
+
     private static void listaReservas(Reserva[] reservasConfirmadas, int contadorReserva) {
-        if (contadorReserva == 0 ) {
+        if (contadorReserva == 0) {
             System.out.println("Nenhuma reserva cadastrada.");
         } else {
             for (int i = 0; i < contadorReserva; i++) {
@@ -74,7 +96,7 @@ public class Main {
                 System.out.println("Reserva cadastrada com sucesso!");
             }
         } else {
-            System.out.println("Limite máximo de reservas atingidos.");
+            System.out.println("Limite máximo de reservas atingidos, não é possível mais cadastrar reservas.\n");
         }
         return contadorReservas;
     }
@@ -83,13 +105,13 @@ public class Main {
 
 
         System.out.println("Digite o nome completo do hóspede: ");
-        String nome = scanner.nextLine();
+        String nome = scanner.nextLine().toUpperCase();
 
 
         chamaMenuQuartos();
         int opcaoQuarto = scanner.nextInt();
         scanner.nextLine();
-        String tipoQuarto = executaOpcaoMenuQuartos(opcaoQuarto);
+        String tipoQuarto = executaOpcaoMenuQuartos(opcaoQuarto, scanner);
 
         System.out.println("Digite a quantiade de diárias desejadas: ");
         int quantidadeDiarias = scanner.nextInt();
@@ -126,27 +148,33 @@ public class Main {
         System.out.println("1 - Standard R$" + diariaStandard + "\n2 - Deluxe R$ " + diariaDeluxe + "\n3 - Suite R$ " + diariaSuite);
     }
 
-    public static String executaOpcaoMenuQuartos(int opcaoQuarto) {
+    public static String executaOpcaoMenuQuartos(int opcaoQuarto, Scanner scanner) {
         String quartoEscolhido = "";
-        switch (opcaoQuarto) {
-            case 1:
-                quartoEscolhido = "Standard";
-                System.out.println("O quarto escolhido foi " + quartoEscolhido);
-                break;
-            case 2:
-                quartoEscolhido = "Deluxe";
-                System.out.println("O quarto escolhido foi " + quartoEscolhido);
-                break;
-            case 3:
-                quartoEscolhido = "Suite";
-                System.out.println("O quarto escolhido foi " + quartoEscolhido);
-                break;
-            default:
-                System.out.println("Opção inválida!");
 
+        while (true) {
+            switch (opcaoQuarto) {
+                case 1:
+                    quartoEscolhido = "Standard";
+                    System.out.println("O quarto escolhido foi " + quartoEscolhido);
+                    return quartoEscolhido;
+                case 2:
+                    quartoEscolhido = "Deluxe";
+                    System.out.println("O quarto escolhido foi " + quartoEscolhido);
+                    return quartoEscolhido;
+                case 3:
+                    quartoEscolhido = "Suite";
+                    System.out.println("O quarto escolhido foi " + quartoEscolhido);
+                    return quartoEscolhido;
+                default:
+                    System.out.println("Opção inválida!");
+                    chamaMenuQuartos();
+                    opcaoQuarto = scanner.nextInt();
+                    scanner.nextLine();
+
+            }
+
+            return quartoEscolhido;
         }
-
-        return quartoEscolhido;
     }
 
 
