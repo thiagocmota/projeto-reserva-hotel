@@ -42,7 +42,6 @@ public class Main {
                 break;
             case 3:
                 buscaReservaPorNome(reservasConfirmadas, contadorReserva, scanner);
-
                 break;
             case 4:
                 listaReservasDecrescente(reservasConfirmadas, contadorReserva);
