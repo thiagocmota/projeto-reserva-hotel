@@ -5,10 +5,11 @@ public class Reserva {
     private int quantidadeDiarias;
     private double totalReserva;
 
-    public Reserva(String nomeHospede, String tipoQuarto, int quantidadeDiarias) {
+    public Reserva(String nomeHospede, String tipoQuarto, int quantidadeDiarias, double valorDiaria) {
         this.nomeHospede = nomeHospede;
         this.tipoQuarto = tipoQuarto;
         this.quantidadeDiarias = quantidadeDiarias;
+        this.totalReserva = calculaTotalReserva(valorDiaria);
     }
 
     public double getTotalReserva() {
@@ -35,23 +36,20 @@ public class Reserva {
         this.tipoQuarto = tipoQuarto;
     }
 
-    public void setQuantidadeDiarias(int quantidadeDiarias) {
+    public void setQuantidadeDiarias(int quantidadeDiarias, double valorDiaria) {
         this.quantidadeDiarias = quantidadeDiarias;
+        this.totalReserva = calculaTotalReserva(valorDiaria);
     }
 
-    public void setTotalReserva(double totalReserva) {
-        this.totalReserva = totalReserva;
-    }
-
-    public void calculaTotalReserva(double valorDiaria){
-        this.totalReserva = this.quantidadeDiarias * valorDiaria;
+    public double calculaTotalReserva(double valorDiaria){
+        return quantidadeDiarias * valorDiaria;
     }
 
     @Override
     public String toString() {
-        return "\nNome do hospede: " + nomeHospede + "\nTipo do quarto: " + tipoQuarto +
+        return "\nNome do hospede: " + nomeHospede +
+                "\nTipo do quarto: " + tipoQuarto +
                 "\nQuantidade de Diárias: " + quantidadeDiarias +
-                "\nValor total da reserva: " + totalReserva;
+                "\nValor total da reserva: R$" + String.format("%.2f", totalReserva);
     }
-
 }
