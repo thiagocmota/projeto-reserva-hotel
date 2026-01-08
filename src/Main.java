@@ -1,4 +1,4 @@
-import java.util.Locale;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -23,9 +23,7 @@ public class Main {
             contadorReserva = executaOpcao(opcao, reservasConfirmadas, contadorReserva, scanner);
 
         } while (opcao != 0);
-
     }
-
 
     public static void chamaMenu() {
         System.out.println("\n----------BEM VINDO----------");
@@ -47,7 +45,7 @@ public class Main {
 
                 break;
             case 4:
-                //listar reserva por número de dias
+                listaReservasDecrescente(reservasConfirmadas, contadorReserva);
                 break;
             case 0:
                 System.out.println("Saindo...");
@@ -58,14 +56,28 @@ public class Main {
         return contadorReserva;
     }
 
+    private static void listaReservasDecrescente(Reserva[] reservasConfirmadas, int contadorReserva) {
+        if (contadorReserva == 0) {
+            System.out.println("\nNenhuma reserva cadastrada.");
+        } else {
+            Reserva[] reservasDecrescente = Arrays.copyOf(reservasConfirmadas, contadorReserva);
+
+            Arrays.sort(reservasDecrescente, (r1, r2) ->
+                    Integer.compare(r2.getQuantidadeDiarias(), r1.getQuantidadeDiarias()));
+            System.out.println("\nLista de reservas ordenadas por quantidade de diárias (decrescente): ");
+            for (Reserva reserva : reservasDecrescente)
+                System.out.println(reserva);
+        }
+    }
+
     private static void buscaReservaPorNome(Reserva[] reservasConfirmadas, int contadorReserva, Scanner scanner) {
-        System.out.println("Digite o nome do hóspede que deseja buscar a reserva: ");
-        String nomeDesejado = scanner.nextLine();
+        System.out.println("\nDigite o nome do hóspede que deseja buscar a reserva: ");
+        String nomeDesejado = scanner.nextLine().toUpperCase();
 
         int reservasEncontradas = 0;
 
         for (int i = 0; i < contadorReserva; i++) {
-            if (reservasConfirmadas[i].getNomeHospede().toLowerCase().contains(nomeDesejado.toLowerCase()) && reservasConfirmadas[i] != null) {
+            if (reservasConfirmadas[i] != null && reservasConfirmadas[i].getNomeHospede().contains(nomeDesejado)) {
                 System.out.println(reservasConfirmadas[i]);
                 reservasEncontradas++;
             }
@@ -73,14 +85,15 @@ public class Main {
         if (reservasEncontradas == 0) {
             System.out.println("\nNenhuma reserva com o nome " + nomeDesejado + " encontrada");
         } else {
-            System.out.println("\nForam encontradas " + reservasEncontradas + " para o hóspede " + nomeDesejado);
+            System.out.println("\nForam encontradas " + reservasEncontradas + " reservas para o hóspede " + nomeDesejado);
         }
     }
 
     private static void listaReservas(Reserva[] reservasConfirmadas, int contadorReserva) {
         if (contadorReserva == 0) {
-            System.out.println("Nenhuma reserva cadastrada.");
+            System.out.println("\nNenhuma reserva cadastrada.");
         } else {
+            System.out.println("\nLista de reservas confirmadas: ");
             for (int i = 0; i < contadorReserva; i++) {
                 System.out.println(reservasConfirmadas[i]);
             }
@@ -103,10 +116,8 @@ public class Main {
 
     private static Reserva cadastraReserva(Scanner scanner) {
 
-
         System.out.println("Digite o nome completo do hóspede: ");
         String nome = scanner.nextLine().toUpperCase();
-
 
         chamaMenuQuartos();
         int opcaoQuarto = scanner.nextInt();
@@ -116,7 +127,6 @@ public class Main {
         System.out.println("Digite a quantiade de diárias desejadas: ");
         int quantidadeDiarias = scanner.nextInt();
 
-
         double valorDiaria;
         if (tipoQuarto.equals("Standard")) {
             valorDiaria = diariaStandard;
@@ -125,8 +135,7 @@ public class Main {
         } else {
             valorDiaria = diariaSuite;
         }
-        Reserva novaReserva = new Reserva(nome, tipoQuarto, quantidadeDiarias);
-        novaReserva.calculaTotalReserva(valorDiaria);
+        Reserva novaReserva = new Reserva(nome, tipoQuarto, quantidadeDiarias, valorDiaria);
 
         System.out.println("Informaçoes da reserva: " + novaReserva + "\n\nDeseja confirmar a reserva acima?");
         System.out.println("1 - Confirmar reserva \n2 - Cancelar reserva");
@@ -137,9 +146,7 @@ public class Main {
             System.out.println("Cadastro de reserva Cancelado.\n");
             return null;
         }
-
         return novaReserva;
-
     }
 
     public static void chamaMenuQuartos() {
@@ -170,12 +177,7 @@ public class Main {
                     chamaMenuQuartos();
                     opcaoQuarto = scanner.nextInt();
                     scanner.nextLine();
-
             }
-
-            return quartoEscolhido;
         }
     }
-
-
 }
